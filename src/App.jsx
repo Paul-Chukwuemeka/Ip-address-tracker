@@ -2,6 +2,14 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan } from "@fortawesome/free-solid-svg-icons";
+import L from "leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+} from "react-leaflet";
+import "leaflet/dist/leaflet.css";
 
 let info = null;
 function App() {
@@ -69,6 +77,23 @@ function App() {
             <h1>{info ? info.isp : ""}</h1>
           </div>
         </div>
+
+        <MapContainer
+          center={[51.505, -0.09]}
+          zoom={13}
+          className="map w-full h-[438px] mt-[-70px] relative -z-10 "
+        >
+          <TileLayer
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          />
+          <Marker position={[51.505, -0.09]}>
+            <Popup>
+              A pretty CSS3 popup. <br /> Easily
+              customizable.
+            </Popup>
+          </Marker>
+        </MapContainer>
       </div>
     </>
   );
