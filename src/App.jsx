@@ -30,58 +30,62 @@ function App() {
   // useEffect(() => {
   //   info = result;
   // }, [result]);
-  console.log(info);
+
   return (
     <>
-      <div className="app w-[100vw] h-[100vh] bg-red-500">
-        <h1 className="text-4xl font-bold text-white text-center pt-6">
-          IP Address Tracker
-        </h1>
-        <div className="input rounded-lg  flex justify-center mt-6">
-          <input
-            type="number"
-            className="bg-white p-2.5 w-[450px] rounded-tl-lg rounded-bl-lg"
-          />
-          <button className="bg-[#2b2b2b] text-white px-4 rounded-tr-lg rounded-br-lg">
-            <FontAwesomeIcon
-              icon={faGreaterThan}
+      <div className="app w-[100vw] h-[100vh]">
+        <div className="top ">
+          <h1 className="text-4xl font-bold text-white text-center pt-6">
+            IP Address Tracker
+          </h1>
+          <div className="input rounded-lg  flex justify-center mt-6">
+            <input
+              type="number"
+              className="bg-white p-2.5 w-[450px] rounded-tl-lg rounded-bl-lg"
             />
-          </button>
-        </div>
-        <div className="info rounded-lg bg-white w-[80%] py-14 h-[50px] border p-3 m-auto mt-11 flex justify-around items-center">
-          <div>
-            <h2>IP Address</h2>
-            <h1>{info ? info.ip : " "}</h1>
+            <button className="bg-[#2b2b2b] text-white px-4 rounded-tr-lg rounded-br-lg">
+              <FontAwesomeIcon
+                icon={faGreaterThan}
+              />
+            </button>
           </div>
-          <hr />
-          <div>
-            <h2>Location</h2>
-            <h1>
-              {info ? info.location.region : " "}
-            </h1>
-          </div>
-          <hr />
-          <div>
-            <h2>Timezone</h2>
-            <h1>
-              {`UTC ${
-                info
-                  ? info.location.timezone
-                  : " "
-              }`}
-            </h1>
-          </div>
-          <hr />
-          <div>
-            <h2>ISP</h2>
-            <h1>{info ? info.isp : ""}</h1>
+          <div className="info rounded-lg bg-white w-[80%] py-14 h-[50px] border p-3 m-auto mt-11 flex justify-around items-center">
+            <div>
+              <h2>IP Address</h2>
+              <h1>{info ? info.ip : " "}</h1>
+            </div>
+            <hr />
+            <div>
+              <h2>Location</h2>
+              <h1>
+                {info
+                  ? info.location.region
+                  : " "}
+              </h1>
+            </div>
+            <hr />
+            <div>
+              <h2>Timezone</h2>
+              <h1>
+                {`UTC ${
+                  info
+                    ? info.location.timezone
+                    : " "
+                }`}
+              </h1>
+            </div>
+            <hr />
+            <div>
+              <h2>ISP</h2>
+              <h1>{info ? info.isp : ""}</h1>
+            </div>
           </div>
         </div>
 
         <MapContainer
           center={[51.505, -0.09]}
           zoom={13}
-          className="map w-full h-[438px] mt-[-70px] relative -z-10 "
+          className="map"
         >
           <TileLayer
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
