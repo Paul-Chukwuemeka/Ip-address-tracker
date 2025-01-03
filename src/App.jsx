@@ -2,18 +2,9 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGreaterThan } from "@fortawesome/free-solid-svg-icons";
-import L from "leaflet";
-import {
-  MapContainer,
-  TileLayer,
-  Marker,
-  Popup,
-} from "react-leaflet";
-import "leaflet/dist/leaflet.css";
+import Map from "./components/Map";
+import { MagnifyingGlass } from "react-loader-spinner";
 
-const regex =
-  /^([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])){3}$/;
-let info = null;
 function App() {
   const [ipAddress, setIpAddress] = useState("");
   const [result, setResult] = useState(null);
@@ -23,41 +14,29 @@ function App() {
 
   const apiUrl = `https://geo.ipify.org/api/v2/country,city?apiKey=${apiKey}&ipAddress=${ipAddress}`;
 
-  let lat,lng
   const validateIPv4 = (ip) => {
     if (!ip) {
-      // Check for empty string or null/undefined
       return false;
     }
     const regex =
       /^([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])(\.([1-9]?\d|1\d\d|2[0-4]\d|25[0-5])){3}$/;
-    return regex.test(input);
+    return regex.test(ip);
   };
 
-  const getIpData = () => {
-    // fetch(apiUrl)
-    //   .then(async (res) => await res.json())
-    //   .then(async (data) => {
-    //     await setResult(data);
-    //   })
-    //   .catch((err) => console.log(err));
+  const getIpData = async () => {
+    try {
+      const res = await fetch(apiUrl);
+      const data = await res.json();
+      setResult(data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   useEffect(() => {
     getIpData();
   }, []);
-  useEffect(() => {
 
-  }, [result]);
-
-  if(result){
-    lat = result.location.lat
-    lng = result.location.lng
-  }
-  else{
-    lat = 51.05
-    lng = -0.09
-  }
   useEffect(() => {
     if (validateIPv4(input)) {
       setIpAddress(input);
@@ -84,7 +63,9 @@ function App() {
               className="bg-white p-2.5 w-[450px] rounded-tl-lg rounded-bl-lg"
             />
             <button
-              onClick={getIpData}
+              onClick={() => {
+                getIpData();
+              }}
               className="bg-[#2b2b2b] text-white px-4 rounded-tr-lg rounded-br-lg"
             >
               <FontAwesomeIcon
@@ -92,7 +73,10 @@ function App() {
               />
             </button>
           </div>
-          <div className="inf rounded-lg bg-white w-[80%] py-14 h-[50px] p-3 m-auto mt-11 flex justify-around items-center ">
+          <div
+            className="info rounded-lg bg-white w-[80%] py-14 h-[50px] p-3 
+          m-auto mt-11 flex justify-around items-center "
+          >
             <div>
               <h2>IP Address</h2>
               <h1>{result ? result.ip : " "}</h1>
@@ -123,23 +107,25 @@ function App() {
             </div>
           </div>
         </div>
-
-        <MapContainer
-          center={[lat, lng]}
-          zoom={13}
-          className="map"
-        >
-          <TileLayer
-            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          />
-          <Marker position={result ?[lat, lng] :[51.505, -0.09]}>
-            <Popup>
-              A pretty CSS3 popup. <br /> Easily
-              customizable.
-            </Popup>
-          </Marker>
-        </MapContainer>
+        <div className="bottom">
+          {!result ? (
+            <div className="map flex justify-center bg-sky-100 items-center h-[50vh]">
+              
+              <MagnifyingGlass
+                color="#00BFFF"
+                height={100}
+                width={100}
+              />
+            </div>
+          ) : result.location ? (
+            <Map
+              lat={result.location.lat}
+              lng={result.location.lng}
+            />
+          ) : (
+            ""
+          )}
+        </div>
       </div>
     </>
   );
